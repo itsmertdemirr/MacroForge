@@ -1,0 +1,115 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch: {}
+
+jobs:
+  build-and-test:
+    # MacroForge.App is a WinForms app and MacroForge.Core P/Invokes user32/kernel32,
+    # so this must build and run on a Windows runner.
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 9
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Restore
+        run: dotnet restore MacroForge.sln
+
+      - name: Build
+        run: dotnet build MacroForge.sln --configuration Release --no-restore
+
+      - name: Test with coverage
+        run: >
+          dotnet test tests/MacroForge.Core.Tests/MacroForge.Core.Tests.csproj
+          --configuration Release
+          --no-build
+          --settings tests/coverlet.runsettings
+          --results-directory ./coverage
+          --logger "trx;LogFileName=test-results.trx"
+
+      - name: Install ReportGenerator
+        run: dotnet tool install -g dotnet-reportgenerator-globaltool
+
+      - name: Generate coverage report
+        run: >
+          reportgenerator
+          -reports:"coverage/**/coverage.cobertura.xml"
+          -targetdir:"coverage/report"
+          -reporttypes:"Html;MarkdownSummaryGithub;Badges"
+
+      - name: Enforce minimum line coverage (80%)
+        shell: pwsh
+        run: |
+          [xml]$cobertura = Get-Content (Get-ChildItem -Recurse -Filter "coverage.cobertura.xml" | Select-Object -First 1).FullName
+          $lineRate = [double]$cobertura.coverage.'line-rate' * 100
+          Write-Host "Line coverage: $([math]::Round($lineRate, 2))%"
+          if ($lineRate -lt 80) {
+            Write-Error "Coverage $([math]::Round($lineRate, 2))% is below the required 80% threshold."
+            exit 1
+          }
+
+      - name: Publish test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: coverage/*.trx
+
+      - name: Publish coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage/report
+
+      - name: Add coverage summary to job summary
+        if: always()
+        shell: pwsh
+        run: |
+          $summary = Get-ChildItem -Recurse -Path coverage/report -Filter "SummaryGithub.md" | Select-Object -First 1
+          if ($summary) {
+            Get-Content $summary.FullName | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
+          }
+
+  benchmarks:
+    # Runs on every push to main; not required to pass for PRs to merge, but results are
+    # published as a build artifact and appended to the job summary so trends are visible.
+    runs-on: windows-latest
+    if: github.event_name == 'push'
+    needs: build-and-test
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 9
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Run benchmarks
+        run: dotnet run --project benchmarks/MacroForge.Benchmarks -c Release -- --filter "*" --exporters json markdown
+
+      - name: Publish benchmark results
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-results
+          path: benchmarks/MacroForge.Benchmarks/BenchmarkDotNet.Artifacts/results
+
+      - name: Add benchmark summary to job summary
+        shell: pwsh
+        run: |
+          $md = Get-ChildItem -Recurse -Path benchmarks/MacroForge.Benchmarks/BenchmarkDotNet.Artifacts/results -Filter "*-report-github.md" -ErrorAction SilentlyContinue
+          foreach ($f in $md) {
+            Get-Content $f.FullName | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
+          }
