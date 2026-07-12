@@ -1,0 +1,11 @@
+# Drag-and-drop: moves to a start point, picks something up, drags it to
+# an end point, and drops it. Add extra mouse.move steps between down/up
+# for a more natural multi-point drag path (e.g. dragging around obstacles).
+mouse.move 200 300
+mouse.down left
+wait 100
+mouse.move 500 300
+wait 50
+mouse.move 500 550
+wait 100
+mouse.up left

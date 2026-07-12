@@ -1,0 +1,16 @@
+# Demonstrates key.down / key.up for modifier combos: select-all, copy,
+# click elsewhere, then paste. This is the pattern for any Ctrl/Alt/Shift
+# combo — hold the modifier with key.down, press the other key(s), then
+# release the modifier with key.up.
+key.down "CTRL"
+key.press "A"
+key.press "C"
+key.up "CTRL"
+
+wait 300
+mouse.move 800 500
+mouse.click left
+
+key.down "CTRL"
+key.press "V"
+key.up "CTRL"

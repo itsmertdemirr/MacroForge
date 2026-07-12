@@ -1,0 +1,9 @@
+# Example MacroForge script — the basics: wait, move, click, type, repeat.
+wait 1000
+mouse.move 500 400
+mouse.click left
+key.type "Hello from MacroForge!"
+repeat 5 {
+    key.press "TAB"
+    wait 150
+}

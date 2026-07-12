@@ -1,0 +1,9 @@
+# Cycles through open windows with Alt+Tab, pausing on each one.
+# key.down "ALT" is held for the whole sequence — releasing it after each
+# TAB would close the Alt+Tab switcher immediately instead of cycling.
+key.down "ALT"
+repeat 4 {
+    key.press "TAB"
+    wait 700
+}
+key.up "ALT"

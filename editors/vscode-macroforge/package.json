@@ -1,0 +1,43 @@
+{
+  "name": "macroforge",
+  "displayName": "MacroForge",
+  "description": "Syntax highlighting, snippets, and basic validation for MacroForge (.mf) macro scripts.",
+  "version": "0.1.0",
+  "publisher": "macroforge",
+  "engines": {
+    "vscode": "^1.75.0"
+  },
+  "categories": ["Programming Languages", "Snippets"],
+  "contributes": {
+    "languages": [
+      {
+        "id": "macroforge",
+        "aliases": ["MacroForge", "mf"],
+        "extensions": [".mf"],
+        "configuration": "./language-configuration.json",
+        "icon": {
+          "light": "./icons/mf-light.svg",
+          "dark": "./icons/mf-dark.svg"
+        }
+      }
+    ],
+    "grammars": [
+      {
+        "language": "macroforge",
+        "scopeName": "source.macroforge",
+        "path": "./syntaxes/macroforge.tmLanguage.json"
+      }
+    ],
+    "snippets": [
+      {
+        "language": "macroforge",
+        "path": "./snippets/macroforge.code-snippets.json"
+      }
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/example/macroforge"
+  },
+  "license": "SEE LICENSE IN ../../LICENSE"
+}

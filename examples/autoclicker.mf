@@ -1,0 +1,8 @@
+# Autoclicker: clicks the current cursor position every 200ms, 50 times.
+# Position your cursor where you want the clicks to land, run this within
+# the wait window below, then let it play out.
+wait 3000
+repeat 50 {
+    mouse.click left
+    wait 200
+}

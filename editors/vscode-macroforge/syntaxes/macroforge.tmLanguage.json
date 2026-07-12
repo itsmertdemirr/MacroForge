@@ -1,0 +1,92 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "MacroForge",
+  "scopeName": "source.macroforge",
+  "patterns": [
+    { "include": "#comments" },
+    { "include": "#strings" },
+    { "include": "#keywords" },
+    { "include": "#namespaces" },
+    { "include": "#actions" },
+    { "include": "#buttons" },
+    { "include": "#numbers" },
+    { "include": "#braces" }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.line.number-sign.macroforge",
+          "match": "#.*$"
+        }
+      ]
+    },
+    "strings": {
+      "patterns": [
+        {
+          "name": "string.quoted.double.macroforge",
+          "begin": "\"",
+          "end": "\"",
+          "patterns": [
+            {
+              "name": "constant.character.escape.macroforge",
+              "match": "\\\\(\"|\\\\|n|t)"
+            }
+          ]
+        }
+      ]
+    },
+    "keywords": {
+      "patterns": [
+        {
+          "name": "keyword.control.macroforge",
+          "match": "\\b(wait|repeat)\\b"
+        }
+      ]
+    },
+    "namespaces": {
+      "patterns": [
+        {
+          "name": "entity.name.namespace.macroforge",
+          "match": "\\b(mouse|key)\\b(?=\\.)"
+        }
+      ]
+    },
+    "actions": {
+      "patterns": [
+        {
+          "comment": "the action after mouse. or key. e.g. mouse.move, key.press",
+          "match": "(\\.)\\s*(move|click|down|up|scroll|press|type)\\b",
+          "captures": {
+            "1": { "name": "punctuation.accessor.macroforge" },
+            "2": { "name": "support.function.macroforge" }
+          }
+        }
+      ]
+    },
+    "buttons": {
+      "patterns": [
+        {
+          "name": "constant.language.button.macroforge",
+          "match": "\\b(left|right|middle)\\b"
+        }
+      ]
+    },
+    "numbers": {
+      "patterns": [
+        {
+          "name": "constant.numeric.macroforge",
+          "match": "-?\\b\\d+(\\.\\d+)?\\b"
+        }
+      ]
+    },
+    "braces": {
+      "patterns": [
+        {
+          "name": "punctuation.section.block.macroforge",
+          "match": "[{}]"
+        }
+      ]
+    }
+  }
+}

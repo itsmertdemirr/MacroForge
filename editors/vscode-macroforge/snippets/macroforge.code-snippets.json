@@ -1,0 +1,56 @@
+{
+  "wait": {
+    "prefix": "wait",
+    "body": "wait ${1:250}",
+    "description": "Pause for N milliseconds"
+  },
+  "repeat block": {
+    "prefix": "repeat",
+    "body": ["repeat ${1:3} {", "\t$0", "}"],
+    "description": "Repeat a block of statements N times"
+  },
+  "mouse move": {
+    "prefix": "mouse.move",
+    "body": "mouse.move ${1:0} ${2:0}",
+    "description": "Move the cursor to absolute screen coordinates"
+  },
+  "mouse click": {
+    "prefix": "mouse.click",
+    "body": "mouse.click ${1|left,right,middle|}",
+    "description": "Click a mouse button at the current cursor position"
+  },
+  "mouse drag": {
+    "prefix": "mouse.drag",
+    "body": [
+      "mouse.move ${1:0} ${2:0}",
+      "mouse.down left",
+      "mouse.move ${3:100} ${4:100}",
+      "mouse.up left"
+    ],
+    "description": "Drag from one point to another"
+  },
+  "mouse scroll": {
+    "prefix": "mouse.scroll",
+    "body": "mouse.scroll ${1:-120}",
+    "description": "Scroll the wheel (negative = down)"
+  },
+  "key press": {
+    "prefix": "key.press",
+    "body": "key.press \"${1:ENTER}\"",
+    "description": "Press and release a single key"
+  },
+  "key combo": {
+    "prefix": "key.combo",
+    "body": [
+      "key.down \"${1:CTRL}\"",
+      "key.press \"${2:C}\"",
+      "key.up \"${1:CTRL}\""
+    ],
+    "description": "Hold a modifier while pressing another key"
+  },
+  "key type": {
+    "prefix": "key.type",
+    "body": "key.type \"${1:text to type}\"",
+    "description": "Type literal text"
+  }
+}

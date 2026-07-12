@@ -1,0 +1,12 @@
+# Nested repeat blocks: types "row N" across 3 rows of 4 cells each,
+# tabbing between cells and pressing Enter between rows. Useful as a
+# template for filling repetitive spreadsheet-like forms.
+repeat 3 {
+    repeat 4 {
+        key.type "cell "
+        key.press "TAB"
+        wait 50
+    }
+    key.press "ENTER"
+    wait 100
+}

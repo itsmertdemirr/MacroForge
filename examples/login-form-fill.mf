@@ -1,0 +1,10 @@
+# Fills a typical username/password login form and submits with Enter.
+# Adjust the coordinates for your target window.
+wait 1000
+mouse.move 640 360
+mouse.click left
+key.type "user@example.com"
+key.press "TAB"
+key.type "correct-horse-battery-staple"
+wait 200
+key.press "ENTER"

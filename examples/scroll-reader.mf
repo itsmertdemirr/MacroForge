@@ -1,0 +1,7 @@
+# Slowly scrolls down a long page, e.g. to read an article or take a
+# screenshot in sections. Negative scroll amounts move down.
+wait 1000
+repeat 10 {
+    mouse.scroll -200
+    wait 800
+}
